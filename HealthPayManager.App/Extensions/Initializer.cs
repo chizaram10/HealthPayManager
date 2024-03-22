@@ -54,7 +54,7 @@ namespace HealthPayManager.App.Extensions
             command.Parameters.Add("@TimeUpdated", SqlDbType.DateTime);
 
             command.Parameters["@Name"].Value = "John Doe";
-            command.Parameters["@PatientId"].Value = "HTH-12345";
+            command.Parameters["@PatientId"].Value = "HTH-JD12345";
             command.Parameters["@TimeCreated"].Value = DateTime.UtcNow;
             command.Parameters["@TimeUpdated"].Value = DateTime.UtcNow;
 

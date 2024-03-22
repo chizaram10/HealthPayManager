@@ -22,14 +22,15 @@ namespace HealthPayManager.App.Controllers
 		[HttpGet]
 		public IActionResult Add()
 		{
-			return View("AddCustomer");
+            ViewData["baseUrl"] = Url.Action("", "", null, Request.Scheme);
+            return View("AddCustomer");
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Add(CreateCustomerDTO customerDTO)
+		public async Task<IActionResult> Add([FromBody]CreateCustomerDTO customerDTO)
 		{
             var response = await _customerService.CreateCustomer(customerDTO);
-			return View("ConfirmCustomerCreation", response);
-		}
+            return response.Status ? Ok(response) : BadRequest(response);
+        }
 	}
 }

@@ -1,4 +1,5 @@
-﻿using HealthPayManager.App.Repositories.Interface;
+﻿using HealthPayManager.App.Data.Entities;
+using HealthPayManager.App.Repositories.Interface;
 using HealthPayManager.App.Services;
 using HealthPayManager.App.Services.Concrete;
 using HealthPayManager.App.Services.Interface;
@@ -25,16 +26,16 @@ namespace HealthPayManager.App.Controllers
         [HttpGet]
         public IActionResult Add(long customerId)
         {
+            ViewData["baseUrl"] = Url.Action("", "", null, Request.Scheme);
             ViewData["customerId"] = customerId;
             return View("AddPayment");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Add(CreatePaymentDTO paymentDTO)
+        [HttpPost]    
+        public async Task<IActionResult> Add([FromBody]CreatePaymentDTO paymentDTO)
         {
-            ViewData["customerId"] = paymentDTO.CustomerId;
-			var response = await _paymentService.CreatePayment(paymentDTO);
-            return View("ConfirmPayment", response);
+            var response = await _paymentService.CreatePayment(paymentDTO);
+            return response.Status ? Ok(response) : BadRequest(response);
         }
     }
 }

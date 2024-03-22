@@ -1,5 +1,9 @@
-﻿<div class="container d-flex justify-content-center">
-    <form asp-area="" asp-controller="Customer" asp-action="Add" method="post" class="g-3 w-75" id="addCustomerForm">
+﻿@{
+    string baseUrl = ViewData["baseUrl"]!.ToString()!;
+}
+
+<div class="container d-flex justify-content-center">
+    <form class="g-3 w-75" id="addCustomerForm">
         <div class="form-row">
             <div class="mb-3">
                 <label for="firstName" class="form-label fw-bold">First Name</label>
@@ -13,3 +17,37 @@
         </div>
     </form>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    const base_Url = "@baseUrl";
+
+    $(document).ready(function () {
+        $("#addCustomerForm").submit(function (e) {
+            e.preventDefault();
+
+            var data = {
+                FirstName: $("#firstName").val(),
+                LastName: $("#lastName").val()
+            };
+
+            $.ajax({
+                type: "POST",
+                url: base_Url + "Customer/Add",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                dataType: "json",
+                success: function (response) {
+                    if (response.status) {
+                        alert(response.data);
+                        window.location.href = "/Customer/Index";
+                    } else {
+                        alert("Failed to add payment. Please try again.");
+                    }
+                },
+                error: function () {
+                    alert(response.message);
+                }
+            });
+        });
+    });
+</script>

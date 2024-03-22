@@ -1,14 +1,57 @@
-﻿<div class="container d-flex justify-content-center">
-    <form asp-area="" asp-controller="Payment" asp-action="Add" method="post" class="g-3 w-75" id="addPaymentForm">
+﻿@{
+    string baseUrl = ViewData["baseUrl"]!.ToString()!;
+    long customerId = (long)ViewData["customerId"]!;
+}
+
+
+<div class="container d-flex justify-content-center">
+    <form class="g-3 w-75" id="addPaymentForm">
         <div class="form-row">
             <div class="mb-3">
                 <label for="amount" class="form-label fw-bold">Amount</label>
-                <input type="text" class="form-control" id="amount" name="Amount" required>
+                <input type="number" class="form-control" id="amount" name="Amount" min="1" required>
             </div>
             <div class="mb-3" hidden>
-                <input type="number" class="form-control" id="customerId" name="CustomerId" value="@ViewData["customerId"]" min="1" required>
+                <input type="text" class="form-control" id="customerId" name="CustomerId" value="@ViewData["customerId"]" required>
             </div>
             <button type="submit" class="btn btn-sm px-4 py-2 rounded-pill text-white fw-bold mt-3" style="background-color: #281600;">Submit</button>
         </div>
     </form>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    const base_Url = "@baseUrl";
+    const customer_Id = "@customerId";
+
+    $(document).ready(function () {
+        $("#addPaymentForm").submit(function (e) {
+            e.preventDefault();
+
+            var data = {
+                Amount: $("#amount").val(),
+                CustomerId: $("#customerId").val()
+            };
+
+            $.ajax({
+                type: "POST",
+                url: base_Url + "Payment/Add",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                dataType: "json",
+                success: function (response) {
+                    if (response.status) {
+                        alert(response.data);
+                        window.location.href = "/Payment/Index?customerId=" + customer_Id;
+                    } else {
+                        alert("Failed to add payment. Please try again.");
+                    }
+                },
+                error: function () {
+                    alert(response.message);
+                }
+            });
+        });
+    });
+</script>
+
