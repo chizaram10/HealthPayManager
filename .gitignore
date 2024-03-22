@@ -364,3 +364,4 @@ FodyWeavers.xsd
 /HealthPayManager.App/appsettings.json
 
 appsettings.json
+appsettings.Development.json
