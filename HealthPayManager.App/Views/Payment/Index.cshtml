@@ -1,0 +1,88 @@
+﻿@model ResponseDTO<PaginatedList<GetPaymentDTO>>?
+@{
+    string requestUrl = $"{Context.Request.Scheme}://{Context.Request.Host.Value}" + Context.Request.Path;
+}
+
+<div class="container-fluid">
+    <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex align-items-center">
+            <h5>Customer Management</h5>
+        </div>
+        <div class="card-body">
+            @{
+                if (Model == null || Model.Status == false)
+                {
+                    <div class="alert-danger">@Model!.Message</div>
+                }
+                else
+                {
+                    <a asp-area="" asp-controller="Payment" asp-action="Add" asp-route-customerId="@ViewData["customerId"]" class="btn btn-sm px-4 py-2 rounded-pill text-white fw-bold" style="background-color: #281600;">Add Payment</a>
+
+                    <div class="table-responsive my-3">
+                        <table class="table table-sm text-dark table-hover" id="customerTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%;">#</th>
+                                    <th class="w-25">Patient ID</th>
+                                    <th class="w-25">Amount</th>
+                                    <th class="w-25">Date Created</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    if (Model!.Status == true && !Model.Data.Result!.Any())
+                                    {
+                                        <tr>
+                                            <td colspan="5" class="text-center">No records exist</td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        int serialNo = 1;
+                                        foreach (var item in Model!.Data.Result!)
+                                        {
+                                            <tr>
+                                                <td>@(serialNo++)</td>
+                                                <td>@item.PatientId</td>
+                                                <td>@item.Amount</td>
+                                                <td>@item.TimeCreated</td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-5">
+                            <div class="dataTables_info f12" id="pending_approvals_info" role="status" aria-live="polite">
+                                Showing @(((Model.Data.CurrentPage * Model.Data.PageSize) - Model.Data.PageSize) + 1)
+                                to @(Model.Data.CurrentPage == Model.Data.TotalPages ? Model.Data.TotalRecords : Model.Data.CurrentPage * Model.Data.PageSize) of @Model.Data.TotalRecords entries
+                            </div>
+                        </div><div class="col-sm-12 col-md-7">
+                            <div class="dataTables_paginate paging_simple_numbers" id="pending_approvals_paginate">
+                                <ul class="pagination">
+                                    <li class="paginate_button page-item previous @(Model.Data.CurrentPage <= 1 ? "disabled" : "") f12" id="pending_approvals_previous">
+                                        <a href="@(Model.Data.CurrentPage <= 1 ? "javascript:void(0);" : $"{requestUrl}?page={Model.Data.CurrentPage - 1}&size={Model.Data.PageSize}")"
+                                           aria-controls="pending_approvals" data-dt-idx="0" tabindex="0" class="page-link">Previous</a>
+                                    </li>
+                                    @for (int i = 1; i <= Model.Data.TotalPages; i++)
+                                    {
+                                        <li class="paginate_button page-item @(i == Model.Data.CurrentPage ? "active" : "d-none") f12">
+                                            <a href="@requestUrl?page=@i&size=@Model.Data.PageSize" aria-controls="pending_approvals" data-dt-idx="1" tabindex="0" class="page-link">@i</a>
+                                        </li>
+                                    }
+                                    <li class="paginate_button page-item next @(Model.Data.CurrentPage >= Model.Data.TotalPages ? "disabled" : "") f12" id="pending_approvals_next">
+                                        <a href="@(Model.Data.CurrentPage >= Model.Data.TotalPages ? "javascript:void(0);" : $"{requestUrl}?page={Model.Data.CurrentPage + 1}&size={Model.Data.PageSize}")"
+                                           aria-controls="pending_approvals" data-dt-idx="4" tabindex="0" class="page-link">Next</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>

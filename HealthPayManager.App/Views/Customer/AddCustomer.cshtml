@@ -1,0 +1,15 @@
+﻿<div class="container d-flex justify-content-center">
+    <form asp-area="" asp-controller="Customer" asp-action="Add" method="post" class="g-3 w-75" id="addCustomerForm">
+        <div class="form-row">
+            <div class="mb-3">
+                <label for="firstName" class="form-label fw-bold">First Name</label>
+                <input type="text" class="form-control" id="firstName" name="FirstName" required>
+            </div>
+            <div class="mb-3">
+                <label for="lastName" class="form-label fw-bold">Last Name</label>
+                <input type="text" class="form-control" id="lastName" name="LastName" required>
+            </div>
+            <button type="submit" class="btn btn-sm px-4 py-2 rounded-pill text-white fw-bold mt-3" style="background-color: #281600;">Submit</button>
+        </div>
+    </form>
+</div>
